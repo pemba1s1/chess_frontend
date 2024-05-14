@@ -1,14 +1,16 @@
 import Board from "./board";
 import Move from "./move";
 import PieceCoordinate from "./pieceCoordinate";
-import Player from "./player";
+import Player, { Color } from "./player";
 import Stack from "./stack";
 
 enum GameStatus {
     WHITE_WINS = "WHITE_WINS",
     BLACK_WINS = "BLACK_WINS",
     IN_PROGRESS = "IN_PROGRESS",
-    PAUSED = "PAUSED",
+    STALEMATE = "STALEMATE",
+    FORFEIT = "FORFEIT",
+    RESIGNATION = "RESIGNATION",
 }
 
 enum PlayerTurn {
@@ -25,7 +27,7 @@ class Chess {
 
     constructor() {
         this._board = new Board();
-        this._players = [ new Player("Player 1"), new Player("Player 2") ];
+        this._players = [ new Player("Player 1", Color.WHITE), new Player("Player 2", Color.BLACK) ];
         this._moves = new Stack<Move>();
         this._gameStatus = GameStatus.IN_PROGRESS;
         this._playerTurn = PlayerTurn.WHITE;

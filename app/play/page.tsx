@@ -1,9 +1,13 @@
 import clsx from "clsx";
 import Image from "next/image";
+import Chess from "../lib/chess";
+import Square from "../components/square";
 
 export default function Home() {
-  const row = [1, 2, 3, 4, 5, 6, 7, 8];
-  const col = [1, 2, 3, 4, 5, 6, 7, 8];
+  const row = [0, 1, 2, 3, 4, 5, 6, 7];
+  const col = [0, 1, 2, 3, 4, 5, 6, 7];
+  const chess = new Chess();
+  const board = chess.board.board;
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       {row.map((r) => (
@@ -18,7 +22,7 @@ export default function Home() {
                 }
                 )}>
                 <div className="flex justify-center items-center h-full">
-                  <Image src="/pieces/king.svg" width={90} height={90} alt="King"/>
+                  <Square spot={board[r][c]}/>
                 </div>
               </div>
             </div>

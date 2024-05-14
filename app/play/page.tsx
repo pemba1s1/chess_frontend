@@ -7,21 +7,35 @@ import { useState } from "react";
 import PieceCoordinate from "../lib/pieceCoordinate";
 import useChessStore from "./store";
 
-export default function Home() {
+export default function ChessBoard() {
   const row = [0, 1, 2, 3, 4, 5, 6, 7];
   const col = [0, 1, 2, 3, 4, 5, 6, 7];
   const chess = useChessStore((state) => state.chess);
   const board = chess.board;
   const players = chess.players;
   const [squares,setSquares] = useState<Square[][]>(board.squares);
+  const [selectedSquare, setSelectedSquare] = useState<PieceCoordinate | null>(null);
 
   const updateBoard = (coordinate: PieceCoordinate) => {
-    if (!board.isMovable) {
-      board.selectSquare(coordinate);
+    if (!selectedSquare && squares[ coordinate.x ][ coordinate.y ].piece) {
+      console.log("Selecting")
+      setSelectedSquare(coordinate)
       return;
     }
-    board.movePiece(coordinate);
+
+    if (selectedSquare?.x == coordinate.x && selectedSquare?.y == coordinate.y) {
+      console.log("Deselecting")
+      setSelectedSquare(null);
+      return;
+    }
+
+    board.movePiece(selectedSquare, coordinate);
+    setSelectedSquare(null);
     setSquares([...board.squares]);
+  }
+
+  const isSelected = (coordinate: PieceCoordinate) => {
+    return selectedSquare?.x == coordinate.x && selectedSquare?.y == coordinate.y;
   }
 
   return (
@@ -39,7 +53,7 @@ export default function Home() {
                     "bg-green-950": (x + y) % 2 !== 0,
                   }
                   )}>
-                  <SquareComponent piece={squares[ x ][ y ].piece} onClick={() => updateBoard(new PieceCoordinate(x, y))}/>
+                  <SquareComponent isSelected={isSelected(new PieceCoordinate(x, y))} piece={squares[ x ][ y ].piece} onClick={() => updateBoard(new PieceCoordinate(x, y))}/>
                 </div>
               </div>
             ))}

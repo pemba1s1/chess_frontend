@@ -5,8 +5,6 @@ import Square from "./Square";
 
 class Board {
     private _squares: Square[][];
-    private _from: PieceCoordinate | null = null;
-    private _isMovable: Boolean = false;
     private _defaultBoard: Square[][] = [
         [
             new Square(new Rook(Color.BLACK), new PieceCoordinate(0,0)), 
@@ -102,14 +100,6 @@ class Board {
         this._squares = board;
     }
 
-    get isMovable() {
-        return this._isMovable;
-    }
-
-    get from() {
-        return this._from;
-    }
-
     resetBoard() {
         this._squares = this._defaultBoard;
     }
@@ -118,19 +108,11 @@ class Board {
         return this.squares[coordinate.x][coordinate.y];
     }
 
-    selectSquare(from: PieceCoordinate) {
-        console.log("Square selected", from, this.getSquareFromCoordinate(from));
-        this._from = from;
-        this._isMovable = true;
-    }
-
-    movePiece(to: PieceCoordinate) {
-        if (this.isMovable && this.from) {
-            console.log("Moving piece", this.from, "to", to);
-            this.squares[to.x][to.y].setPiece(this.squares[this.from?.x][this.from?.y].piece);
-            this.squares[this.from?.x][this.from?.y].setPiece(null);
-            this._from = null;
-            this._isMovable = false;
+    movePiece(from: PieceCoordinate | null, to: PieceCoordinate) {
+        if (to && from) {
+            console.log("Moving piece", from, "to", to);
+            this.squares[to.x][to.y].setPiece(this.squares[from.x][from.y].piece);
+            this.squares[from.x][from?.y].setPiece(null);
         }
     }
 

@@ -17,7 +17,7 @@ export default function ChessBoard() {
   const [selectedSquare, setSelectedSquare] = useState<PieceCoordinate | null>(null);
 
   const updateBoard = (coordinate: PieceCoordinate) => {
-    if (!selectedSquare && squares[ coordinate.x ][ coordinate.y ].piece) {
+    if (!selectedSquare && squares[ coordinate.x ][ coordinate.y ].piece && chess.playerTurn == squares[ coordinate.x ][ coordinate.y ].piece?.color) {
       console.log("Selecting")
       setSelectedSquare(coordinate)
       return;
@@ -29,9 +29,12 @@ export default function ChessBoard() {
       return;
     }
 
-    board.movePiece(selectedSquare, coordinate);
-    setSelectedSquare(null);
-    setSquares([...board.squares]);
+    if (selectedSquare) {
+      board.movePiece(selectedSquare, coordinate);
+      setSelectedSquare(null);
+      chess.switchTurn();
+      setSquares([...board.squares]);
+    }
   }
 
   const isSelected = (coordinate: PieceCoordinate) => {

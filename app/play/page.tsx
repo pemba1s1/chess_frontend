@@ -1,32 +1,45 @@
+'use client';
 import clsx from "clsx";
-import Chess from "../lib/chess";
 import Square from "../components/square";
 import PlayerCard from "../components/player";
+import Spot from "../lib/spot";
+import { useState } from "react";
+import PieceCoordinate from "../lib/pieceCoordinate";
+import useChessStore from "./store";
 
 export default function Home() {
   const row = [0, 1, 2, 3, 4, 5, 6, 7];
   const col = [0, 1, 2, 3, 4, 5, 6, 7];
-  const chess = new Chess();
-  const board = chess.board.board;
+  const chess = useChessStore((state) => state.chess);
+  const board = chess.board;
   const players = chess.players;
+  const [squares,setSquares] = useState<Spot[][]>(board.squares);
+
+  const updateBoard = (coordinate: PieceCoordinate) => {
+    if (!board.isMovable) {
+      board.selectSpot(coordinate);
+      return;
+    }
+    board.movePiece(coordinate);
+    setSquares([...board.squares]);
+  }
+
   return (
     <main className="flex min-h-screen flex-row items-center justify-between">
       <PlayerCard player={players[0]}/>
       <div>
-        {row.map((r) => (
-          <div key={r} className="flex flex-row">
-            {col.map((c) => (
-              <div key={c} className="flex flex-col">
+        {row.map((x) => (
+          <div key={`x-${x}`} className="flex flex-row">
+            {col.map((y) => (
+              <div key={`y-${y}`} className="flex flex-col">
                 <div className={clsx(
                   "chess-cell",
                   {
-                    "bg-white": (r + c) % 2 === 0,
-                    "bg-green-950": (r + c) % 2 !== 0,
+                    "bg-white": (x + y) % 2 === 0,
+                    "bg-green-950": (x + y) % 2 !== 0,
                   }
                   )}>
-                  <div className="flex justify-center items-center h-full">
-                    <Square spot={board[r][c]}/>
-                  </div>
+                  <Square piece={squares[ x ][ y ].piece} onClick={() => updateBoard(new PieceCoordinate(x, y))}/>
                 </div>
               </div>
             ))}

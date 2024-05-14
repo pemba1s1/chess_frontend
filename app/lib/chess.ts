@@ -54,7 +54,7 @@ class Chess {
     }
 
     movePiece(from: PieceCoordinate, to: PieceCoordinate) {
-
+        
     }
 
     killPiece(at: string) {

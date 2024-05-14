@@ -1,8 +1,8 @@
 'use client';
 import clsx from "clsx";
-import Square from "../components/square";
+import SquareComponent from "../components/square";
 import PlayerCard from "../components/player";
-import Spot from "../lib/spot";
+import Square from "../lib/Square";
 import { useState } from "react";
 import PieceCoordinate from "../lib/pieceCoordinate";
 import useChessStore from "./store";
@@ -13,11 +13,11 @@ export default function Home() {
   const chess = useChessStore((state) => state.chess);
   const board = chess.board;
   const players = chess.players;
-  const [squares,setSquares] = useState<Spot[][]>(board.squares);
+  const [squares,setSquares] = useState<Square[][]>(board.squares);
 
   const updateBoard = (coordinate: PieceCoordinate) => {
     if (!board.isMovable) {
-      board.selectSpot(coordinate);
+      board.selectSquare(coordinate);
       return;
     }
     board.movePiece(coordinate);
@@ -39,7 +39,7 @@ export default function Home() {
                     "bg-green-950": (x + y) % 2 !== 0,
                   }
                   )}>
-                  <Square piece={squares[ x ][ y ].piece} onClick={() => updateBoard(new PieceCoordinate(x, y))}/>
+                  <SquareComponent piece={squares[ x ][ y ].piece} onClick={() => updateBoard(new PieceCoordinate(x, y))}/>
                 </div>
               </div>
             ))}

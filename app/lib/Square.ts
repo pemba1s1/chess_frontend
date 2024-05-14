@@ -1,10 +1,11 @@
 import PieceCoordinate from "./pieceCoordinate";
+import { Piece } from "./piece";
 
-class Spot {
-    private _piece: string | null;
+class Square {
+    private _piece: Piece | null;
     private _coordinate: PieceCoordinate;
 
-    constructor(piece: string | null, coordinate: PieceCoordinate) {
+    constructor(piece: Piece | null, coordinate: PieceCoordinate) {
         this._piece = piece;
         this._coordinate = coordinate;
     }
@@ -17,9 +18,9 @@ class Spot {
         return this._coordinate;
     }
 
-    setPiece(piece: string | null) {
+    setPiece(piece: Piece | null) {
         this._piece = piece;
     }
 }
 
-export default Spot;
+export default Square;

@@ -52,17 +52,6 @@ class Chess {
     get playerTurn() {
         return this._playerTurn;
     }
-
-    movePiece(from: PieceCoordinate, to: PieceCoordinate) {
-        
-    }
-
-    killPiece(at: string) {
-
-    }
-
-
-
 }
 
 export default Chess;

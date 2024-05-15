@@ -15,13 +15,24 @@ enum PieceIconPath {
     W_KING = "/pieces/white/king.svg",
 }
 
+export enum PieceType {
+    PAWN = "pawn",
+    ROOK = "rook",
+    KNIGHT = "knight",
+    BISHOP = "bishop",
+    QUEEN = "queen",
+    KING = "king",
+}
+
 export class Piece {
     private _color: Color;
     private _icon: string;
+    private _type: string;
 
-    constructor(color: Color, icon: string) {
+    constructor(color: Color, icon: string, type: string) {
         this._color = color;
         this._icon = icon;
+        this._type = type;
     }
 
     get color() {
@@ -31,65 +42,69 @@ export class Piece {
     get icon() {
         return this._icon;
     }
+
+    get type() {
+        return this._type;
+    }
 }
 
 export class Pawn extends Piece {
     constructor(color: Color) {
         if (color === Color.WHITE) {
-            super(color, PieceIconPath.W_PAWN);
+            super(color, PieceIconPath.W_PAWN, PieceType.PAWN);
             return;
         }
-        super(color, PieceIconPath.B_PAWN);
+        super(color, PieceIconPath.B_PAWN, PieceType.PAWN);
     }
 }
 
 export class Rook extends Piece {
     constructor(color: Color) {
         if (color === Color.WHITE) {
-            super(color, PieceIconPath.W_ROOK);
+            super(color, PieceIconPath.W_ROOK, PieceType.ROOK);
             return;
         }
-        super(color, PieceIconPath.B_ROOK);
+        super(color, PieceIconPath.B_ROOK, PieceType.ROOK);
     }
 }
 
 export class Knight extends Piece {
     constructor(color: Color) {
         if (color === Color.WHITE) {
-            super(color, PieceIconPath.W_KNIGHT);
+            super(color, PieceIconPath.W_KNIGHT, PieceType.KNIGHT);
             return;
         }
-        super(color, PieceIconPath.B_KNIGHT);
+        super(color, PieceIconPath.B_KNIGHT, PieceType.KNIGHT);
     }
 }
 
 export class Bishop extends Piece { 
     constructor(color: Color) {
         if (color === Color.WHITE) {
-            super(color, PieceIconPath.W_BISHOP);
+            super(color, PieceIconPath.W_BISHOP, PieceType.BISHOP);
             return;
         }
-        super(color, PieceIconPath.B_BISHOP);
+        super(color, PieceIconPath.B_BISHOP, PieceType.BISHOP);
     }
 }
 
 export class Queen extends Piece {  
     constructor(color: Color) {
         if (color === Color.WHITE) {
-            super(color, PieceIconPath.W_QUEEN);
+            super(color, PieceIconPath.W_QUEEN, PieceType.QUEEN);
             return;
         }
-        super(color, PieceIconPath.B_QUEEN);
+        super(color, PieceIconPath.B_QUEEN, PieceType.QUEEN);
     }
 }
 
 export class King extends Piece {
     constructor(color: Color) {
         if (color === Color.WHITE) {
-            super(color, PieceIconPath.W_KING);
+            super(color, PieceIconPath.W_KING, PieceType.KING);
             return;
         }
-        super(color, PieceIconPath.B_KING);
+        super(color, PieceIconPath.B_KING, PieceType.KING);
     }
 }
 

@@ -108,14 +108,6 @@ class Board {
         return this.squares[coordinate.x][coordinate.y];
     }
 
-    movePiece(from: PieceCoordinate | null, to: PieceCoordinate) {
-        if (to && from) {
-            console.log("Moving piece", from, "to", to);
-            this.squares[to.x][to.y].setPiece(this.squares[from.x][from.y].piece);
-            this.squares[from.x][from?.y].setPiece(null);
-        }
-    }
-
 }
 
 export default Board;

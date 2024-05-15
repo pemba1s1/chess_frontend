@@ -29,11 +29,19 @@ export default function ChessBoard() {
       return;
     }
 
+    if (selectedSquare && squares[ selectedSquare.x ][ selectedSquare.y ].piece?.color == squares[ coordinate.x ][ coordinate.y ].piece?.color) {
+      console.log("Reselecting")
+      setSelectedSquare(coordinate)
+      return;
+    }
+
     if (selectedSquare) {
-      board.movePiece(selectedSquare, coordinate);
-      setSelectedSquare(null);
-      chess.switchTurn();
-      setSquares([...board.squares]);
+      const res = chess.movePiece(selectedSquare, coordinate);
+      if(res) {
+        setSelectedSquare(null);
+        chess.switchTurn();
+        setSquares([...board.squares]);
+      }
     }
   }
 
@@ -42,9 +50,10 @@ export default function ChessBoard() {
   }
 
   return (
-    <main className="flex min-h-screen flex-row items-center justify-between">
+    <main className="flex min-h-screen flex-row items-center justify-between bg-gray-800">
       <PlayerCard player={players[0]}/>
       <div>
+        <div className="mb-5 font-semibold text-xl">Game Status: {chess.gameStatus}</div>
         {row.map((x) => (
           <div key={`x-${x}`} className="flex flex-row">
             {col.map((y) => (
@@ -53,7 +62,7 @@ export default function ChessBoard() {
                   "chess-cell",
                   {
                     "bg-white": (x + y) % 2 === 0,
-                    "bg-green-950": (x + y) % 2 !== 0,
+                    "bg-green-800": (x + y) % 2 !== 0,
                   }
                   )}>
                   <SquareComponent isSelected={isSelected(new PieceCoordinate(x, y))} piece={squares[ x ][ y ].piece} onClick={() => updateBoard(new PieceCoordinate(x, y))}/>

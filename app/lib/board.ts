@@ -1,7 +1,8 @@
 import PieceCoordinate from "./pieceCoordinate";
 import { Bishop, King, Knight, Pawn, Queen, Rook } from "./piece";
 import { Color } from "./player";
-import Square from "./Square";
+import Square from "./square";
+
 
 class Board {
     private _squares: Square[][];
@@ -92,7 +93,7 @@ class Board {
         this._squares = this._defaultBoard;
     }
 
-    get squares() {
+    get squares(): Square[][] {
         return this._squares;
     }
 
@@ -104,7 +105,7 @@ class Board {
         this._squares = this._defaultBoard;
     }
 
-    getSquareFromCoordinate(coordinate: PieceCoordinate) {
+    getSquareFromCoordinate(coordinate: PieceCoordinate): Square {
         return this.squares[coordinate.x][coordinate.y];
     }
 

@@ -8,11 +8,11 @@ class PieceCoordinate {
     this._y = y;
   }
 
-  get x() {
+  get x(): number {
     return this._x;
   }
 
-  get y() {
+  get y(): number {
     return this._y;
   }
 }

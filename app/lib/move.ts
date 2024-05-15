@@ -12,15 +12,15 @@ class Move {
         this._movedBy = movedBy;
     }
 
-    get from() {
+    get from(): PieceCoordinate {
         return this._from;
     }
 
-    get to() {
+    get to(): PieceCoordinate {
         return this._to;
     }
 
-    get movedBy() {
+    get movedBy(): Color {
         return this._movedBy;
     }
 }

@@ -10,11 +10,11 @@ class Square {
         this._coordinate = coordinate;
     }
 
-    get piece() {
+    get piece(): Piece | null{
         return this._piece;
     }
 
-    get coordinate() {
+    get coordinate(): PieceCoordinate {
         return this._coordinate;
     }
 

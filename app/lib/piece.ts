@@ -35,15 +35,15 @@ export class Piece {
         this._type = type;
     }
 
-    get color() {
+    get color(): Color {
         return this._color;
     }
 
-    get icon() {
+    get icon(): string {
         return this._icon;
     }
 
-    get type() {
+    get type(): string {
         return this._type;
     }
 }

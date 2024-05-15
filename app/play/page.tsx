@@ -2,7 +2,7 @@
 import clsx from "clsx";
 import SquareComponent from "../components/square";
 import PlayerCard from "../components/player";
-import Square from "../lib/Square";
+import Square from "../lib/square";
 import { useState } from "react";
 import PieceCoordinate from "../lib/pieceCoordinate";
 import useChessStore from "./store";

@@ -16,15 +16,15 @@ class Player {
         this._killedPieces = [];
     }
 
-    get name() {
+    get name(): string {
         return this._name;
     }
 
-    get color() {
+    get color(): Color {
         return this._color;
     }
 
-    get killedPieces() {
+    get killedPieces(): Piece[] {
         return this._killedPieces;
     }
 }

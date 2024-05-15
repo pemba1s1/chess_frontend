@@ -28,23 +28,23 @@ class Chess {
         this._playerTurn = Color.WHITE;
     }
 
-    get board() {
+    get board(): Board {
         return this._board;
     }
 
-    get players() {
+    get players(): Player[] {
         return this._players;
     }
 
-    get moves() {
+    get moves(): Stack<Move> {
         return this._moves;
     }
 
-    get gameStatus() {
+    get gameStatus(): GameStatus {
         return this._gameStatus;
     }
 
-    get playerTurn() {
+    get playerTurn(): Color {
         return this._playerTurn;
     }
 
@@ -52,15 +52,15 @@ class Chess {
         this._playerTurn = this._playerTurn == Color.WHITE ? Color.BLACK : Color.WHITE;
     }
 
-    movePiece(from: PieceCoordinate | null, to: PieceCoordinate) {
+    movePiece(from: PieceCoordinate | null, to: PieceCoordinate): Boolean {
         if (!to || !from) {
-            return;
+            return false;
         }
         const fromPiece = this.board.getSquareFromCoordinate(from).piece;
         const toPiece = this.board.getSquareFromCoordinate(to).piece;
 
         if(fromPiece?.color == toPiece?.color) {
-            return;
+            return false;
         }
 
         if(toPiece) {
@@ -85,6 +85,10 @@ class Chess {
             }
         }
         console.log("Killed pieces", this.players[0].killedPieces, this.players[1].killedPieces);
+    }
+
+    getPossibleMoves(piece: Piece): PieceCoordinate[] {
+        return [];
     }
 }
 

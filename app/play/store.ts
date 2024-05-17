@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import Chess from "../lib/chess";
-import Square from "../lib/square";
+import Square from "../lib/Square";
 
 export type ChessStore = {
     chess: Chess;

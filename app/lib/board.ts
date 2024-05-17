@@ -1,7 +1,7 @@
 import PieceCoordinate from "./pieceCoordinate";
 import { Bishop, King, Knight, Pawn, Queen, Rook } from "./piece";
 import { Color } from "./player";
-import Square from "./square";
+import Square from "./Square";
 
 
 class Board {

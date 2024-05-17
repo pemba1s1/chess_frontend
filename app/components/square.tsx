@@ -7,14 +7,16 @@ import clsx from "clsx";
 type SquareProps = {
     piece: Piece | null;
     isSelected: Boolean;
+    isPossibleMove: Boolean;
     onClick: () => void;
 }
-export default function SquareComponent({piece, onClick, isSelected}: SquareProps) {
+export default function SquareComponent({piece, onClick, isSelected, isPossibleMove}: SquareProps) {
     return (
         <div className={clsx(
             "flex justify-center items-center h-full",
             {
                 "bg-orange-300": isSelected,
+                "bg-amber-200": isPossibleMove,
             }
             )} 
             onClick={onClick}

@@ -15,30 +15,35 @@ export default function ChessBoard() {
   const players = chess.players;
   const [squares,setSquares] = useState<Square[][]>(board.squares);
   const [selectedSquare, setSelectedSquare] = useState<PieceCoordinate | null>(null);
+  const [possibleMoves, setPossibleMoves] = useState<PieceCoordinate[]>([]);
 
   const updateBoard = (coordinate: PieceCoordinate) => {
     if (!selectedSquare && squares[ coordinate.x ][ coordinate.y ].piece && chess.playerTurn == squares[ coordinate.x ][ coordinate.y ].piece?.color) {
       console.log("Selecting")
       setSelectedSquare(coordinate)
+      setPossibleMoves(chess.calcPossibleMoves(coordinate));
       return;
     }
 
     if (selectedSquare?.x == coordinate.x && selectedSquare?.y == coordinate.y) {
       console.log("Deselecting")
       setSelectedSquare(null);
+      setPossibleMoves([]);
       return;
     }
 
     if (selectedSquare && squares[ selectedSquare.x ][ selectedSquare.y ].piece?.color == squares[ coordinate.x ][ coordinate.y ].piece?.color) {
       console.log("Reselecting")
-      setSelectedSquare(coordinate)
+      setSelectedSquare(coordinate)      
+      setPossibleMoves(chess.calcPossibleMoves(coordinate));
       return;
     }
 
-    if (selectedSquare) {
+    if (selectedSquare && isPossibleMove(coordinate)) {
       const res = chess.movePiece(selectedSquare, coordinate);
       if(res) {
         setSelectedSquare(null);
+        setPossibleMoves([]);
         chess.switchTurn();
         setSquares([...board.squares]);
       }
@@ -47,6 +52,13 @@ export default function ChessBoard() {
 
   const isSelected = (coordinate: PieceCoordinate) => {
     return selectedSquare?.x == coordinate.x && selectedSquare?.y == coordinate.y;
+  }
+
+  const isPossibleMove = (coordinate: PieceCoordinate) => {
+    if (!selectedSquare) {
+      return false;
+    }
+    return possibleMoves.some((move) => move.x === coordinate.x && move.y === coordinate.y);
   }
 
   return (
@@ -65,7 +77,7 @@ export default function ChessBoard() {
                     "bg-green-800": (x + y) % 2 !== 0,
                   }
                   )}>
-                  <SquareComponent isSelected={isSelected(new PieceCoordinate(x, y))} piece={squares[ x ][ y ].piece} onClick={() => updateBoard(new PieceCoordinate(x, y))}/>
+                  <SquareComponent isPossibleMove={isPossibleMove(new PieceCoordinate(x, y))} isSelected={isSelected(new PieceCoordinate(x, y))} piece={squares[ x ][ y ].piece} onClick={() => updateBoard(new PieceCoordinate(x, y))}/>
                 </div>
               </div>
             ))}

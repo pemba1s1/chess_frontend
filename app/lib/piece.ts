@@ -24,15 +24,27 @@ export enum PieceType {
     KING = "king",
 }
 
-export class Piece {
-    private _color: Color;
-    private _icon: string;
-    private _type: string;
+export enum NoOfSteps {
+    ONE = 1,
+    INFINITE = 8
+}
 
-    constructor(color: Color, icon: string, type: string) {
+export type Direction = {
+    direction: number[][];
+    steps: NoOfSteps;
+}
+
+export class Piece {
+    protected _color: Color;
+    protected _icon: string;
+    protected _type: string;
+    protected _moveDirection: Direction;
+
+    constructor(color: Color, icon: string, type: string, moveDirection: Direction) {
         this._color = color;
         this._icon = icon;
         this._type = type;
+        this._moveDirection = moveDirection;
     }
 
     get color(): Color {
@@ -46,65 +58,83 @@ export class Piece {
     get type(): string {
         return this._type;
     }
+
+    getMoveDirection(): Direction {
+        return this._moveDirection;
+    }
 }
 
 export class Pawn extends Piece {
+    private _firstMoveDirection: Direction;
+    private _killDirection: Direction;
+    private _hasMoved: Boolean = false;
     constructor(color: Color) {
-        if (color === Color.WHITE) {
-            super(color, PieceIconPath.W_PAWN, PieceType.PAWN);
-            return;
+        const icon = color === Color.WHITE ? PieceIconPath.W_PAWN : PieceIconPath.B_PAWN;
+        const direction: Direction = color === Color.WHITE ? { direction: [[-1, 0]], steps: NoOfSteps.ONE } : { direction: [[1, 0]], steps: NoOfSteps.ONE };
+        super(color, icon, PieceType.PAWN, direction);
+        
+        this._firstMoveDirection = color === Color.WHITE ? { direction: [[-2, 0]], steps: NoOfSteps.ONE } : { direction: [[2, 0]], steps: NoOfSteps.ONE }; 
+        this._killDirection = color === Color.WHITE ? { direction: [[-1, 1], [-1, -1]], steps: NoOfSteps.ONE } : { direction: [[1, 1], [1, -1]], steps: NoOfSteps.ONE };
+        this._hasMoved = false;
+    }
+
+    set hasMoved(value: Boolean) {
+        this._hasMoved = value;
+    }
+
+    get hasMoved(): Boolean {
+        return this._hasMoved;
+    }
+
+    get killDirection(): Direction {
+        return this._killDirection;
+    }
+
+    getMoveDirection(): Direction {
+        if(!this.hasMoved) {
+            return { direction: this._moveDirection.direction.concat(this._firstMoveDirection.direction), steps: NoOfSteps.ONE };
         }
-        super(color, PieceIconPath.B_PAWN, PieceType.PAWN);
+        return super.getMoveDirection();
     }
 }
 
 export class Rook extends Piece {
     constructor(color: Color) {
-        if (color === Color.WHITE) {
-            super(color, PieceIconPath.W_ROOK, PieceType.ROOK);
-            return;
-        }
-        super(color, PieceIconPath.B_ROOK, PieceType.ROOK);
+        const icon = color === Color.WHITE ? PieceIconPath.W_ROOK : PieceIconPath.B_ROOK;
+        const direction: Direction = { direction: [[1, 0], [0, 1], [-1, 0], [0, -1]], steps: NoOfSteps.INFINITE };
+        super(color, icon, PieceType.ROOK, direction);
     }
 }
 
 export class Knight extends Piece {
     constructor(color: Color) {
-        if (color === Color.WHITE) {
-            super(color, PieceIconPath.W_KNIGHT, PieceType.KNIGHT);
-            return;
-        }
-        super(color, PieceIconPath.B_KNIGHT, PieceType.KNIGHT);
+        const icon = color === Color.WHITE ? PieceIconPath.W_KNIGHT : PieceIconPath.B_KNIGHT;
+        const direction: Direction = { direction: [[2, 1], [1, 2], [-2, 1], [-1, 2], [2, -1], [1, -2], [-2, -1], [-1, -2]], steps: NoOfSteps.ONE };
+        super(color, icon, PieceType.KNIGHT, direction);
     }
 }
 
 export class Bishop extends Piece { 
     constructor(color: Color) {
-        if (color === Color.WHITE) {
-            super(color, PieceIconPath.W_BISHOP, PieceType.BISHOP);
-            return;
-        }
-        super(color, PieceIconPath.B_BISHOP, PieceType.BISHOP);
+        const icon = color === Color.WHITE ? PieceIconPath.W_BISHOP : PieceIconPath.B_BISHOP;
+        const direction: Direction = { direction: [[1, 1], [-1, 1], [1, -1], [-1, -1]], steps: NoOfSteps.INFINITE };
+        super(color, icon, PieceType.BISHOP, direction);
     }
 }
 
 export class Queen extends Piece {  
     constructor(color: Color) {
-        if (color === Color.WHITE) {
-            super(color, PieceIconPath.W_QUEEN, PieceType.QUEEN);
-            return;
-        }
-        super(color, PieceIconPath.B_QUEEN, PieceType.QUEEN);
+        const icon = color === Color.WHITE ? PieceIconPath.W_QUEEN : PieceIconPath.B_QUEEN;
+        const direction: Direction = { direction: [[1, 1], [-1, 1], [1, -1], [-1, -1], [1, 0], [0, 1], [-1, 0], [0, -1]], steps: NoOfSteps.INFINITE };
+        super(color, icon, PieceType.QUEEN, direction);
     }
 }
 
 export class King extends Piece {
     constructor(color: Color) {
-        if (color === Color.WHITE) {
-            super(color, PieceIconPath.W_KING, PieceType.KING);
-            return;
-        }
-        super(color, PieceIconPath.B_KING, PieceType.KING);
+        const icon = color === Color.WHITE ? PieceIconPath.W_KING : PieceIconPath.B_KING;
+        const direction: Direction = { direction: [[1, 1], [-1, 1], [1, -1], [-1, -1], [1, 0], [0, 1], [-1, 0], [0, -1]], steps: NoOfSteps.ONE };
+        super(color, icon, PieceType.KING, direction);
     }
 }
 

@@ -131,16 +131,22 @@ class Chess {
             const x = from.x + dir[0];
             const y = from.y + dir[1];
             const coordinate = new PieceCoordinate(x, y);
+            if(x < 0 || x >= 8 || y < 0 || y >= 8 ) {
+                return;
+            }
             if(this.coordinateHasPiece(coordinate)) {
                 this.isPieceKillable(coordinate) && possibleMoves.push(coordinate);
             }
         });
-        
+
         const normalDirection = piece.getMoveDirection();
         normalDirection.direction.forEach((dir) => {
             const x = from.x + dir[0];
             const y = from.y + dir[1];
             const coordinate = new PieceCoordinate(x, y);
+            if(x < 0 || x >= 8 || y < 0 || y >= 8 ) {
+                    return;
+            }
             if(!this.coordinateHasPiece(coordinate)) {
                 possibleMoves.push(coordinate);
             }

@@ -56,7 +56,7 @@ class Chess {
         return this._playerTurn;
     }
 
-    newGame() {
+    newGame(): Board {
         this._board = new Board();
         this._players = [ new Player("Player 1", Color.WHITE), new Player("Player 2", Color.BLACK) ];
         this._moves = new Stack<Move>();

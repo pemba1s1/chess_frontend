@@ -6,6 +6,8 @@ import Square from "../lib/square";
 import { useState } from "react";
 import PieceCoordinate from "../lib/pieceCoordinate";
 import useChessStore from "./store";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function ChessBoard() {
   const row = [0, 1, 2, 3, 4, 5, 6, 7];
@@ -61,30 +63,46 @@ export default function ChessBoard() {
     return possibleMoves.some((move) => move.x === coordinate.x && move.y === coordinate.y);
   }
 
+  const startNewGame = () => {
+    const newBoard = chess.newGame();
+    setSelectedSquare(null);
+    setPossibleMoves([]);
+    setSquares([...newBoard.squares]);
+  }
+
   return (
-    <main className="flex min-h-screen flex-row items-center justify-between bg-gray-800">
-      <PlayerCard player={players[0]}/>
-      <div>
-        <div className="mb-5 font-semibold text-xl">Game Status: {chess.gameStatus}</div>
-        {row.map((x) => (
-          <div key={`x-${x}`} className="flex flex-row">
-            {col.map((y) => (
-              <div key={`y-${y}`} className="flex flex-col">
-                <div className={clsx(
-                  "chess-cell",
-                  {
-                    "bg-white": (x + y) % 2 === 0,
-                    "bg-green-800": (x + y) % 2 !== 0,
-                  }
-                  )}>
-                  <SquareComponent isPossibleMove={isPossibleMove(new PieceCoordinate(x, y))} isSelected={isSelected(new PieceCoordinate(x, y))} piece={squares[ x ][ y ].piece} onClick={() => updateBoard(new PieceCoordinate(x, y))}/>
-                </div>
-              </div>
-            ))}
-          </div>
-        ))}
+    <div className="min-h-screen bg-[#E6F5E6]">
+      <div className="flex justify-between items-center px-8 py-2 bg-white">
+          <Link href="/" className="flex items-center gap-2">
+              <Image src="/logo.png" alt="Logo" width={50} height={50} />
+              <span className="text-lg font-bold">Chess</span>
+          </Link>
+          <span className="text-2xl font-bold">{chess.gameStatus}</span>
+          <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={startNewGame}>New Game</button>
       </div>
-      <PlayerCard player={players[1]}/>
-    </main>
+      <main className="flex relative flex-row items-center justify-between pt-6">        
+        <PlayerCard player={players[0]}/>
+        <div>
+          {row.map((x) => (
+            <div key={`x-${x}`} className="flex flex-row">
+              {col.map((y) => (
+                <div key={`y-${y}`} className="flex flex-col">
+                  <div className={clsx(
+                    "chess-cell",
+                    {
+                      "bg-white": (x + y) % 2 === 0,
+                      "bg-green-800": (x + y) % 2 !== 0,
+                    }
+                    )}>
+                    <SquareComponent isPossibleMove={isPossibleMove(new PieceCoordinate(x, y))} isSelected={isSelected(new PieceCoordinate(x, y))} piece={squares[ x ][ y ].piece} onClick={() => updateBoard(new PieceCoordinate(x, y))}/>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        <PlayerCard player={players[1]}/>
+      </main>
+    </div>
   );
 }

@@ -12,19 +12,27 @@ enum GameStatus {
     STALEMATE = "Stalemate",
     FORFEIT = "Forfeit",
     RESIGNATION = "Resignation",
+    WHITE_TURN = "White's Turn",
+    BLACK_TURN = "Black's Turn"
+}
+
+enum PlayerTurn {
+    WHITE = "WHITE",
+    BLACK = "BLACK",
+    ENDED = "ENDED"
 }
 class Chess {
     private _board: Board;
     private _players: Player[];
     private _moves: Stack<Move>;
     private _gameStatus: GameStatus;
-    private _playerTurn: Color;
+    private _playerTurn: Color | PlayerTurn;
 
     constructor() {
         this._board = new Board();
         this._players = [ new Player("Player 1", Color.WHITE), new Player("Player 2", Color.BLACK) ];
         this._moves = new Stack<Move>();
-        this._gameStatus = GameStatus.IN_PROGRESS;
+        this._gameStatus = GameStatus.WHITE_TURN;
         this._playerTurn = Color.WHITE;
     }
 
@@ -44,12 +52,27 @@ class Chess {
         return this._gameStatus;
     }
 
-    get playerTurn(): Color {
+    get playerTurn(): Color | PlayerTurn {
         return this._playerTurn;
     }
 
+    newGame() {
+        this._board = new Board();
+        this._players = [ new Player("Player 1", Color.WHITE), new Player("Player 2", Color.BLACK) ];
+        this._moves = new Stack<Move>();
+        this._gameStatus = GameStatus.WHITE_TURN;
+        this._playerTurn = Color.WHITE;
+
+        return this._board;
+    }
+
     switchTurn() {
+        if(this._gameStatus == GameStatus.WHITE_WINS || this._gameStatus == GameStatus.BLACK_WINS) {
+            this._playerTurn = PlayerTurn.ENDED;
+            return;
+        }
         this._playerTurn = this._playerTurn == Color.WHITE ? Color.BLACK : Color.WHITE;
+        this._gameStatus = this._playerTurn == Color.WHITE ? GameStatus.WHITE_TURN : GameStatus.BLACK_TURN;
     }
 
     movePiece(from: PieceCoordinate | null, to: PieceCoordinate): Boolean {

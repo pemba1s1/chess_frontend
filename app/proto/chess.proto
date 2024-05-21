@@ -1,0 +1,73 @@
+syntax = "proto3";
+package chess;
+
+enum PieceType {
+    NONE = 0;
+    KING = 1;
+    QUEEN = 2;
+    ROOK = 3;
+    BISHOP = 4;
+    KNIGHT = 5;
+    PAWN = 6;
+}
+
+enum Color {
+    WHITE = 0;
+    BLACK = 1;
+}
+
+message Player {
+    string name = 1;
+    Color color = 2;
+}
+
+message CreateRoomRequest {
+    Player player_1 = 1;
+}
+
+message RoomResponse {
+    string roomId = 1;
+    string status = 2;
+}
+
+message JoinRoomRequest {
+    string roomId = 1;
+    Player player_2 = 2;
+}
+
+message GetRoomsResponse {
+    repeated RoomResponse rooms = 1;
+}
+
+message Coordinate {
+    int32 x = 1;
+    int32 y = 2;
+}
+
+message Move {
+    Coordinate from = 1;
+    Coordinate to = 2;
+}
+
+message MoveRequest {
+    string roomId = 1;
+    Player player = 2;
+    Move move = 3;
+    PieceType killedPiece = 4;
+}
+
+message MoveResponse {
+    Move move = 1;
+    Player player = 2;
+    PieceType killedPiece = 3;
+}
+
+message GetRoomRequest {
+}
+
+service Chess {
+    rpc CreateRoom(CreateRoomRequest) returns (RoomResponse) {}
+    rpc JoinRoom(JoinRoomRequest) returns (RoomResponse) {}
+    rpc GetRooms(GetRoomRequest) returns (GetRoomsResponse) {}
+    rpc Moves(stream MoveRequest) returns (stream MoveResponse) {}
+}

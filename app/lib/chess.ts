@@ -5,7 +5,7 @@ import Stack from "./stack";
 import PieceCoordinate from "./pieceCoordinate";
 import { Direction, Pawn, Piece, PieceType } from "./piece";
 
-enum GameStatus {
+export enum GameStatus {
     WHITE_WINS = "White Wins",
     BLACK_WINS = "Black Wins",
     IN_PROGRESS = "In Progress",
@@ -13,13 +13,15 @@ enum GameStatus {
     FORFEIT = "Forfeit",
     RESIGNATION = "Resignation",
     WHITE_TURN = "White's Turn",
-    BLACK_TURN = "Black's Turn"
+    BLACK_TURN = "Black's Turn",
+    WAITING = "Waiting For All Players"
 }
 
 enum PlayerTurn {
     WHITE = "WHITE",
     BLACK = "BLACK",
-    ENDED = "ENDED"
+    ENDED = "ENDED",
+    WAITING = "WAITING"
 }
 class Chess {
     private _board: Board;
@@ -30,10 +32,10 @@ class Chess {
 
     constructor() {
         this._board = new Board();
-        this._players = [ new Player("Player 1", Color.WHITE), new Player("Player 2", Color.BLACK) ];
+        this._players = [];
         this._moves = new Stack<Move>();
-        this._gameStatus = GameStatus.WHITE_TURN;
-        this._playerTurn = Color.WHITE;
+        this._gameStatus = GameStatus.WAITING;
+        this._playerTurn = PlayerTurn.WAITING;
     }
 
     get board(): Board {
@@ -54,6 +56,18 @@ class Chess {
 
     get playerTurn(): Color | PlayerTurn {
         return this._playerTurn;
+    }
+
+    set gameStatus(status: GameStatus) {
+        this._gameStatus = status;
+    }
+
+    set playerTurn(turn: Color) {
+        this._playerTurn = turn;
+    }
+
+    addPlayer(player: Player) {
+        this._players.push(player);
     }
 
     newGame(): Board {

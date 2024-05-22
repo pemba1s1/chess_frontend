@@ -6,10 +6,16 @@ type PlayerCardProps = {
     player: Player;
 }
 export default function PlayerCard({player} : PlayerCardProps) {
-    const killedPieces = player.killedPieces;
+    const killedPieces = player?.killedPieces;
     return (
     <div className="flex flex-col items-center justify-start h-[90vh] font-bold text-2xl w-full py-16 text-black">
-        <p>{player.name}</p>
-        <KilledPiece killedPieces={killedPieces}/>
+        {player ? 
+        <>
+            <p>{player?.name}</p>
+            <KilledPiece killedPieces={killedPieces}/>
+        </> : 
+        <>
+        <p>Waiting For Player</p>
+        </>}
     </div>);
 }

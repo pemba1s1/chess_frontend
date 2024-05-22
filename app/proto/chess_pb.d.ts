@@ -51,6 +51,16 @@ export class RoomResponse extends jspb.Message {
   getStatus(): string;
   setStatus(value: string): RoomResponse;
 
+  getPlayer1(): Player | undefined;
+  setPlayer1(value?: Player): RoomResponse;
+  hasPlayer1(): boolean;
+  clearPlayer1(): RoomResponse;
+
+  getPlayer2(): Player | undefined;
+  setPlayer2(value?: Player): RoomResponse;
+  hasPlayer2(): boolean;
+  clearPlayer2(): RoomResponse;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): RoomResponse.AsObject;
   static toObject(includeInstance: boolean, msg: RoomResponse): RoomResponse.AsObject;
@@ -63,6 +73,8 @@ export namespace RoomResponse {
   export type AsObject = {
     roomid: string,
     status: string,
+    player1?: Player.AsObject,
+    player2?: Player.AsObject,
   }
 }
 
@@ -223,6 +235,9 @@ export namespace MoveResponse {
 }
 
 export class GetRoomRequest extends jspb.Message {
+  getRoomid(): string;
+  setRoomid(value: string): GetRoomRequest;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetRoomRequest.AsObject;
   static toObject(includeInstance: boolean, msg: GetRoomRequest): GetRoomRequest.AsObject;
@@ -233,6 +248,33 @@ export class GetRoomRequest extends jspb.Message {
 
 export namespace GetRoomRequest {
   export type AsObject = {
+    roomid: string,
+  }
+}
+
+export class RoomResponseStream extends jspb.Message {
+  getRoom(): RoomResponse | undefined;
+  setRoom(value?: RoomResponse): RoomResponseStream;
+  hasRoom(): boolean;
+  clearRoom(): RoomResponseStream;
+
+  getMove(): MoveResponse | undefined;
+  setMove(value?: MoveResponse): RoomResponseStream;
+  hasMove(): boolean;
+  clearMove(): RoomResponseStream;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): RoomResponseStream.AsObject;
+  static toObject(includeInstance: boolean, msg: RoomResponseStream): RoomResponseStream.AsObject;
+  static serializeBinaryToWriter(message: RoomResponseStream, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): RoomResponseStream;
+  static deserializeBinaryFromReader(message: RoomResponseStream, reader: jspb.BinaryReader): RoomResponseStream;
+}
+
+export namespace RoomResponseStream {
+  export type AsObject = {
+    room?: RoomResponse.AsObject,
+    move?: MoveResponse.AsObject,
   }
 }
 

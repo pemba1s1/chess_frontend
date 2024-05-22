@@ -1,5 +1,5 @@
 /**
- * @fileoverview gRPC-Web generated client stub for chess
+ * @fileoverview gRPC-Web generated client stub for 
  * @enhanceable
  * @public
  */
@@ -40,7 +40,7 @@ export class ChessClient {
   }
 
   methodDescriptorCreateRoom = new grpcWeb.MethodDescriptor(
-    '/chess.Chess/CreateRoom',
+    '/Chess/CreateRoom',
     grpcWeb.MethodType.UNARY,
     app_proto_chess_pb.CreateRoomRequest,
     app_proto_chess_pb.RoomResponse,
@@ -68,7 +68,7 @@ export class ChessClient {
     if (callback !== undefined) {
       return this.client_.rpcCall(
         this.hostname_ +
-          '/chess.Chess/CreateRoom',
+          '/Chess/CreateRoom',
         request,
         metadata || {},
         this.methodDescriptorCreateRoom,
@@ -76,14 +76,14 @@ export class ChessClient {
     }
     return this.client_.unaryCall(
     this.hostname_ +
-      '/chess.Chess/CreateRoom',
+      '/Chess/CreateRoom',
     request,
     metadata || {},
     this.methodDescriptorCreateRoom);
   }
 
   methodDescriptorJoinRoom = new grpcWeb.MethodDescriptor(
-    '/chess.Chess/JoinRoom',
+    '/Chess/JoinRoom',
     grpcWeb.MethodType.UNARY,
     app_proto_chess_pb.JoinRoomRequest,
     app_proto_chess_pb.RoomResponse,
@@ -111,7 +111,7 @@ export class ChessClient {
     if (callback !== undefined) {
       return this.client_.rpcCall(
         this.hostname_ +
-          '/chess.Chess/JoinRoom',
+          '/Chess/JoinRoom',
         request,
         metadata || {},
         this.methodDescriptorJoinRoom,
@@ -119,14 +119,14 @@ export class ChessClient {
     }
     return this.client_.unaryCall(
     this.hostname_ +
-      '/chess.Chess/JoinRoom',
+      '/Chess/JoinRoom',
     request,
     metadata || {},
     this.methodDescriptorJoinRoom);
   }
 
   methodDescriptorGetRooms = new grpcWeb.MethodDescriptor(
-    '/chess.Chess/GetRooms',
+    '/Chess/GetRooms',
     grpcWeb.MethodType.UNARY,
     app_proto_chess_pb.GetRoomRequest,
     app_proto_chess_pb.GetRoomsResponse,
@@ -154,7 +154,7 @@ export class ChessClient {
     if (callback !== undefined) {
       return this.client_.rpcCall(
         this.hostname_ +
-          '/chess.Chess/GetRooms',
+          '/Chess/GetRooms',
         request,
         metadata || {},
         this.methodDescriptorGetRooms,
@@ -162,10 +162,118 @@ export class ChessClient {
     }
     return this.client_.unaryCall(
     this.hostname_ +
-      '/chess.Chess/GetRooms',
+      '/Chess/GetRooms',
     request,
     metadata || {},
     this.methodDescriptorGetRooms);
+  }
+
+  methodDescriptorMoves = new grpcWeb.MethodDescriptor(
+    '/Chess/Moves',
+    grpcWeb.MethodType.UNARY,
+    app_proto_chess_pb.MoveRequest,
+    app_proto_chess_pb.MoveResponse,
+    (request: app_proto_chess_pb.MoveRequest) => {
+      return request.serializeBinary();
+    },
+    app_proto_chess_pb.MoveResponse.deserializeBinary
+  );
+
+  moves(
+    request: app_proto_chess_pb.MoveRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<app_proto_chess_pb.MoveResponse>;
+
+  moves(
+    request: app_proto_chess_pb.MoveRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: app_proto_chess_pb.MoveResponse) => void): grpcWeb.ClientReadableStream<app_proto_chess_pb.MoveResponse>;
+
+  moves(
+    request: app_proto_chess_pb.MoveRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: app_proto_chess_pb.MoveResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/Chess/Moves',
+        request,
+        metadata || {},
+        this.methodDescriptorMoves,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/Chess/Moves',
+    request,
+    metadata || {},
+    this.methodDescriptorMoves);
+  }
+
+  methodDescriptorGetRoomInfo = new grpcWeb.MethodDescriptor(
+    '/Chess/GetRoomInfo',
+    grpcWeb.MethodType.UNARY,
+    app_proto_chess_pb.GetRoomRequest,
+    app_proto_chess_pb.RoomResponse,
+    (request: app_proto_chess_pb.GetRoomRequest) => {
+      return request.serializeBinary();
+    },
+    app_proto_chess_pb.RoomResponse.deserializeBinary
+  );
+
+  getRoomInfo(
+    request: app_proto_chess_pb.GetRoomRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<app_proto_chess_pb.RoomResponse>;
+
+  getRoomInfo(
+    request: app_proto_chess_pb.GetRoomRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: app_proto_chess_pb.RoomResponse) => void): grpcWeb.ClientReadableStream<app_proto_chess_pb.RoomResponse>;
+
+  getRoomInfo(
+    request: app_proto_chess_pb.GetRoomRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: app_proto_chess_pb.RoomResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/Chess/GetRoomInfo',
+        request,
+        metadata || {},
+        this.methodDescriptorGetRoomInfo,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/Chess/GetRoomInfo',
+    request,
+    metadata || {},
+    this.methodDescriptorGetRoomInfo);
+  }
+
+  methodDescriptorListenToRoom = new grpcWeb.MethodDescriptor(
+    '/Chess/ListenToRoom',
+    grpcWeb.MethodType.SERVER_STREAMING,
+    app_proto_chess_pb.GetRoomRequest,
+    app_proto_chess_pb.RoomResponse,
+    (request: app_proto_chess_pb.GetRoomRequest) => {
+      return request.serializeBinary();
+    },
+    app_proto_chess_pb.RoomResponse.deserializeBinary
+  );
+
+  listenToRoom(
+    request: app_proto_chess_pb.GetRoomRequest,
+    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<app_proto_chess_pb.RoomResponse> {
+    return this.client_.serverStreaming(
+      this.hostname_ +
+        '/Chess/ListenToRoom',
+      request,
+      metadata || {},
+      this.methodDescriptorListenToRoom);
   }
 
 }

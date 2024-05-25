@@ -14,6 +14,8 @@ export default function Create() {
 
 
     useEffect(() => {
+        if (!client) return;
+        if (roomId) return;
         const player = new ProtoPlayer();
         player.setName("Player 1");
         player.setColor(ProtoColor.WHITE);

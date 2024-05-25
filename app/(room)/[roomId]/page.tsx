@@ -5,7 +5,7 @@ import Square from "@/app/lib/Square";
 import { GameStatus } from "@/app/lib/chess";
 import PieceCoordinate from "@/app/lib/pieceCoordinate";
 import Player, { Color } from "@/app/lib/player";
-import { Color as ProtoColor, GetRoomRequest, MoveRequest, Player as ProtoPlayer, Coordinate, Move } from "@/app/proto/chess_pb";
+import { Color as ProtoColor, GetRoomRequest, MoveRequest, Player as ProtoPlayer, Coordinate, Move, RoomResponseStream } from "@/app/proto/chess_pb";
 import useChessStore from "@/app/store"
 import clsx from "clsx";
 import Image from "next/image";
@@ -24,12 +24,14 @@ export default function Page({ params }: { params: { roomId: string } }) {
     const [squares,setSquares] = useState<Square[][]>(board.squares);
     const [selectedSquare, setSelectedSquare] = useState<PieceCoordinate | null>(null);
     const [possibleMoves, setPossibleMoves] = useState<PieceCoordinate[]>([]);
-    const [player1Ready, setPlayer1Ready] = useState(false);
-    const [player2Ready, setPlayer2Ready] = useState(false);
+    const [player1Ready, setPlayer1Ready] = useState<Boolean>(false);
+    const [player2Ready, setPlayer2Ready] = useState<Boolean>(false);
+    const [isStreamReady, setIsStreamReady] = useState<Boolean>();
 
     useEffect(() => {
         if (!client) return;
         if (!player) return;
+        if (isStreamReady) return;
         const roomRequest = new MoveRequest();
         roomRequest.setRoomid(params.roomId);
         const protoPlayer = new ProtoPlayer();
@@ -38,8 +40,9 @@ export default function Page({ params }: { params: { roomId: string } }) {
         roomRequest.setPlayer(protoPlayer);
         const st = client.listenToRoom(roomRequest);
         console.log("Listening to room")
+        setIsStreamReady(true);
+
         st.on("data", (res) => {
-            // Handle the data received from the stream
             console.log(res)
             const player = res.getPlayer();
             const move = res.getMove();
@@ -58,13 +61,15 @@ export default function Page({ params }: { params: { roomId: string } }) {
             }
         });
         st.on("error", (err) => {
-            // Handle any errors that occur during the stream
             console.error("Stream errro", err)
         });
         st.on("end", () => {
-            // Handle the end of the stream
             console.log("Stream ended")
         });
+        return () => {
+            st.cancel();
+            setIsStreamReady(false);
+        }
     }, [player, params.roomId, client]);
     
     useEffect(() => {

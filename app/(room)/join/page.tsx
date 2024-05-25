@@ -13,12 +13,7 @@ export default function Join() {
     const setPlayer = useChessStore((state) => state.setPlayer);
     const player = useChessStore((state) => state.player);
     const [roomJoined, setRoomJoined] = useState(false);
-    
-    useEffect(() => {
-        client.getRooms(new GetRoomRequest()).then((res) => {
-            console.log(res.getRoomsList());
-        });
-    })
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const player = new ProtoPlayer();
@@ -38,7 +33,7 @@ export default function Join() {
         if (player && roomJoined) {
             router.push(`/${roomId}`);
         }
-    },[player , roomId]);
+    },[player, roomId]);
 
     return (
         <main className="flex relative min-h-screen flex-col items-center justify-center bg-chess text-black">

@@ -3,7 +3,7 @@ import clsx from "clsx";
 import SquareComponent from "../components/square";
 import PlayerCard from "../components/player";
 import Square from "../lib/Square";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PieceCoordinate from "../lib/pieceCoordinate";
 import useChessStore from "./store";
 import Link from "next/link";
@@ -18,6 +18,10 @@ export default function ChessBoard() {
   const [squares,setSquares] = useState<Square[][]>(board.squares);
   const [selectedSquare, setSelectedSquare] = useState<PieceCoordinate | null>(null);
   const [possibleMoves, setPossibleMoves] = useState<PieceCoordinate[]>([]);
+
+  useEffect(() => {
+    console.log("ChessBoard mounted")
+  });
 
   const updateBoard = (coordinate: PieceCoordinate) => {
     if (!selectedSquare && squares[ coordinate.x ][ coordinate.y ].piece && chess.playerTurn == squares[ coordinate.x ][ coordinate.y ].piece?.color) {

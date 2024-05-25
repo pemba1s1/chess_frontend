@@ -76,6 +76,10 @@ export default function ChessBoard() {
 
   const startNewGame = () => {
     const newBoard = chess.newGame();
+    chess.addPlayer(new Player("Player 1", Color.WHITE));
+    chess.addPlayer(new Player("Player 2", Color.BLACK));
+    chess.gameStatus = GameStatus.IN_PROGRESS;
+    chess.playerTurn = Color.WHITE;
     setSelectedSquare(null);
     setPossibleMoves([]);
     setSquares([...newBoard.squares]);

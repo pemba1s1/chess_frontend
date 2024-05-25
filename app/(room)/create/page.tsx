@@ -27,7 +27,6 @@ export default function Create() {
     },[client]);
 
     useEffect(() => {
-        console.log(player);
         if (player && roomId) {
             router.push(`/${roomId}`);
         }

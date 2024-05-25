@@ -12,6 +12,7 @@ export default function Join() {
     const router = useRouter();
     const setPlayer = useChessStore((state) => state.setPlayer);
     const player = useChessStore((state) => state.player);
+    const [roomJoined, setRoomJoined] = useState(false);
     
     useEffect(() => {
         client.getRooms(new GetRoomRequest()).then((res) => {
@@ -20,7 +21,6 @@ export default function Join() {
     })
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(roomId);
         const player = new ProtoPlayer();
         player.setName("Player 2");
         player.setColor(ProtoColor.BLACK);
@@ -30,14 +30,12 @@ export default function Join() {
 
         client.joinRoom(joinRoomRequest).then((res) => {
             setPlayer(new Player("Player 2", Color.BLACK));
-            setRoomId(res.getRoomid());
+            setRoomJoined(true);
         })
-        // Handle form submission logic here
     };
 
     useEffect(() => {
-        console.log(player);
-        if (player && roomId) {
+        if (player && roomJoined) {
             router.push(`/${roomId}`);
         }
     },[player , roomId]);

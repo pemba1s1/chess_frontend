@@ -72,10 +72,9 @@ class Chess {
 
     newGame(): Board {
         this._board = new Board();
-        this._players = [ new Player("Player 1", Color.WHITE), new Player("Player 2", Color.BLACK) ];
         this._moves = new Stack<Move>();
-        this._gameStatus = GameStatus.WHITE_TURN;
-        this._playerTurn = Color.WHITE;
+        this._gameStatus = GameStatus.IN_PROGRESS;
+        this._playerTurn = PlayerTurn.WHITE;
 
         return this._board;
     }

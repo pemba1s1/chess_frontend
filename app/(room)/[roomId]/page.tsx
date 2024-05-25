@@ -17,21 +17,29 @@ export default function Page({ params }: { params: { roomId: string } }) {
     const row = [0, 1, 2, 3, 4, 5, 6, 7];
     const col = [0, 1, 2, 3, 4, 5, 6, 7];
     const chess = useChessStore((state) => state.chess);
+    const newGame = useChessStore((state) => state.newGame);
     const turn = chess.playerTurn;
     const board = chess.board;
     const player = useChessStore((state) => state.player);
     const players = chess.players;
-    const [squares,setSquares] = useState<Square[][]>(board.squares);
+    const squares = board.squares;
     const [selectedSquare, setSelectedSquare] = useState<PieceCoordinate | null>(null);
     const [possibleMoves, setPossibleMoves] = useState<PieceCoordinate[]>([]);
     const [player1Ready, setPlayer1Ready] = useState<Boolean>(false);
     const [player2Ready, setPlayer2Ready] = useState<Boolean>(false);
-    const [isStreamReady, setIsStreamReady] = useState<Boolean>();
+    const [isStreamReady, setIsStreamReady] = useState<Boolean>(false);
+    const [isNewChess, setIsNewChess] = useState<Boolean>(false);
 
     useEffect(() => {
         if (!client) return;
         if (!player) return;
         if (isStreamReady) return;
+        console.log(isNewChess)
+        if (!isNewChess) {
+            newGame();
+            setIsNewChess(true);
+            return;
+        }
         const roomRequest = new MoveRequest();
         roomRequest.setRoomid(params.roomId);
         const protoPlayer = new ProtoPlayer();
@@ -43,7 +51,6 @@ export default function Page({ params }: { params: { roomId: string } }) {
         setIsStreamReady(true);
 
         st.on("data", (res) => {
-            console.log(res)
             const player = res.getPlayer();
             const move = res.getMove();
             if (!player2Ready && player && !move) {
@@ -70,9 +77,11 @@ export default function Page({ params }: { params: { roomId: string } }) {
             st.cancel();
             setIsStreamReady(false);
         }
-    }, [player, params.roomId, client]);
+    }, [player, params.roomId, client, chess]);
     
     useEffect(() => {
+        if (!client) return;
+        if (!isNewChess) return
         const roomRequest = new GetRoomRequest();
         roomRequest.setRoomid(params.roomId);
         
@@ -92,7 +101,11 @@ export default function Page({ params }: { params: { roomId: string } }) {
                 chess.gameStatus = GameStatus.IN_PROGRESS;
             }
         })
-    },[params.roomId])
+        return () => {
+            console.log('unmounting')
+            setIsNewChess(false);
+        }
+    },[params.roomId, isNewChess])
 
 
     const updateBoard = (coordinate: PieceCoordinate) => {
@@ -134,7 +147,6 @@ export default function Page({ params }: { params: { roomId: string } }) {
             setSelectedSquare(null);
             setPossibleMoves([]);
             chess.switchTurn();
-            setSquares([...board.squares]);
         }
     }
 
@@ -162,21 +174,14 @@ export default function Page({ params }: { params: { roomId: string } }) {
     }
     
     const isSelected = (coordinate: PieceCoordinate) => {
-    return selectedSquare?.x == coordinate.x && selectedSquare?.y == coordinate.y;
+        return selectedSquare?.x == coordinate.x && selectedSquare?.y == coordinate.y;
     }
 
     const isPossibleMove = (coordinate: PieceCoordinate) => {
-    if (!selectedSquare) {
-        return false;
-    }
-    return possibleMoves.some((move) => move.x === coordinate.x && move.y === coordinate.y);
-    }
-
-    const startNewGame = () => {
-    const newBoard = chess.newGame();
-    setSelectedSquare(null);
-    setPossibleMoves([]);
-    setSquares([...newBoard.squares]);
+        if (!selectedSquare) {
+            return false;
+        }
+        return possibleMoves.some((move) => move.x === coordinate.x && move.y === coordinate.y);
     }
 
     function getColorName(colorValue: ProtoColor): Color {
@@ -195,7 +200,7 @@ export default function Page({ params }: { params: { roomId: string } }) {
                     <span className="text-lg font-bold">Chess</span>
                 </Link>
                 <span className="text-2xl font-bold">{chess.gameStatus}</span>
-                <button className="px-4 py-2 text-white bg-blue-500 rounded-md" onClick={startNewGame}>New Game</button>
+                <button className="px-4 py-2 text-white bg-blue-500 rounded-md">Rematch</button>
             </div>
             <Suspense fallback={<div>Loading...</div>}>
                 <div className="flex relative flex-row items-center justify-between pt-6">
@@ -212,7 +217,7 @@ export default function Page({ params }: { params: { roomId: string } }) {
                                 "bg-green-800": (x + y) % 2 !== 0,
                             }
                             )}>
-                            <SquareComponent isPossibleMove={isPossibleMove(new PieceCoordinate(x, y))} isSelected={isSelected(new PieceCoordinate(x, y))} piece={squares[ x ][ y ].piece} onClick={() => updateBoard(new PieceCoordinate(x, y))}/>
+                            <SquareComponent isPossibleMove={isPossibleMove(new PieceCoordinate(x, y))} isSelected={isSelected(new PieceCoordinate(x, y))} piece={chess.board.squares[ x ][ y ].piece} onClick={() => updateBoard(new PieceCoordinate(x, y))}/>
                             </div>
                         </div>
                         ))}

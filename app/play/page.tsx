@@ -15,20 +15,22 @@ export default function ChessBoard() {
   const row = [0, 1, 2, 3, 4, 5, 6, 7];
   const col = [0, 1, 2, 3, 4, 5, 6, 7];
   const chess = useChessStore((state) => state.chess);
+  const newGame = useChessStore((state) => state.newGame);
   const board = chess.board;
   const players = chess.players;
-  const [squares,setSquares] = useState<Square[][]>(board.squares);
+  const squares = board.squares;
   const [selectedSquare, setSelectedSquare] = useState<PieceCoordinate | null>(null);
   const [possibleMoves, setPossibleMoves] = useState<PieceCoordinate[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [playerAdded, setPlayerAdded] = useState<Boolean>(false);
 
   useEffect(() => {
+    if (playerAdded) return;
     chess.addPlayer(new Player("Player 1", Color.WHITE));
     chess.addPlayer(new Player("Player 2", Color.BLACK));
     chess.gameStatus = GameStatus.IN_PROGRESS;
     chess.playerTurn = Color.WHITE;
-    setLoading(false);
-  },[chess])
+    setPlayerAdded(true);
+  },[chess, playerAdded])
 
   const updateBoard = (coordinate: PieceCoordinate) => {
     if (!selectedSquare && squares[ coordinate.x ][ coordinate.y ].piece && chess.playerTurn == squares[ coordinate.x ][ coordinate.y ].piece?.color) {
@@ -58,7 +60,6 @@ export default function ChessBoard() {
         setSelectedSquare(null);
         setPossibleMoves([]);
         chess.switchTurn();
-        setSquares([...board.squares]);
       }
     }
   }
@@ -75,14 +76,8 @@ export default function ChessBoard() {
   }
 
   const startNewGame = () => {
-    const newBoard = chess.newGame();
-    chess.addPlayer(new Player("Player 1", Color.WHITE));
-    chess.addPlayer(new Player("Player 2", Color.BLACK));
-    chess.gameStatus = GameStatus.IN_PROGRESS;
-    chess.playerTurn = Color.WHITE;
-    setSelectedSquare(null);
-    setPossibleMoves([]);
-    setSquares([...newBoard.squares]);
+    newGame();
+    setPlayerAdded(false);
   }
 
   return (

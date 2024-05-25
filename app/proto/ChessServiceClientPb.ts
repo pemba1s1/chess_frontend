@@ -257,17 +257,17 @@ export class ChessClient {
   methodDescriptorListenToRoom = new grpcWeb.MethodDescriptor(
     '/Chess/ListenToRoom',
     grpcWeb.MethodType.SERVER_STREAMING,
-    app_proto_chess_pb.GetRoomRequest,
-    app_proto_chess_pb.RoomResponse,
-    (request: app_proto_chess_pb.GetRoomRequest) => {
+    app_proto_chess_pb.MoveRequest,
+    app_proto_chess_pb.RoomResponseStream,
+    (request: app_proto_chess_pb.MoveRequest) => {
       return request.serializeBinary();
     },
-    app_proto_chess_pb.RoomResponse.deserializeBinary
+    app_proto_chess_pb.RoomResponseStream.deserializeBinary
   );
 
   listenToRoom(
-    request: app_proto_chess_pb.GetRoomRequest,
-    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<app_proto_chess_pb.RoomResponse> {
+    request: app_proto_chess_pb.MoveRequest,
+    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<app_proto_chess_pb.RoomResponseStream> {
     return this.client_.serverStreaming(
       this.hostname_ +
         '/Chess/ListenToRoom',

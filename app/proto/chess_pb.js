@@ -2197,8 +2197,10 @@ proto.RoomResponseStream.prototype.toObject = function(opt_includeInstance) {
  */
 proto.RoomResponseStream.toObject = function(includeInstance, msg) {
   var f, obj = {
-    room: (f = msg.getRoom()) && proto.RoomResponse.toObject(includeInstance, f),
-    move: (f = msg.getMove()) && proto.MoveResponse.toObject(includeInstance, f)
+    roomid: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    player: (f = msg.getPlayer()) && proto.Player.toObject(includeInstance, f),
+    move: (f = msg.getMove()) && proto.Move.toObject(includeInstance, f),
+    killedpiece: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -2236,14 +2238,22 @@ proto.RoomResponseStream.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.RoomResponse;
-      reader.readMessage(value,proto.RoomResponse.deserializeBinaryFromReader);
-      msg.setRoom(value);
+      var value = /** @type {string} */ (reader.readString());
+      msg.setRoomid(value);
       break;
     case 2:
-      var value = new proto.MoveResponse;
-      reader.readMessage(value,proto.MoveResponse.deserializeBinaryFromReader);
+      var value = new proto.Player;
+      reader.readMessage(value,proto.Player.deserializeBinaryFromReader);
+      msg.setPlayer(value);
+      break;
+    case 3:
+      var value = new proto.Move;
+      reader.readMessage(value,proto.Move.deserializeBinaryFromReader);
       msg.setMove(value);
+      break;
+    case 4:
+      var value = /** @type {!proto.PieceType} */ (reader.readEnum());
+      msg.setKilledpiece(value);
       break;
     default:
       reader.skipField();
@@ -2274,41 +2284,73 @@ proto.RoomResponseStream.prototype.serializeBinary = function() {
  */
 proto.RoomResponseStream.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getRoom();
+  f = message.getRoomid();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+  f = message.getPlayer();
   if (f != null) {
     writer.writeMessage(
-      1,
+      2,
       f,
-      proto.RoomResponse.serializeBinaryToWriter
+      proto.Player.serializeBinaryToWriter
     );
   }
   f = message.getMove();
   if (f != null) {
     writer.writeMessage(
-      2,
+      3,
       f,
-      proto.MoveResponse.serializeBinaryToWriter
+      proto.Move.serializeBinaryToWriter
+    );
+  }
+  f = message.getKilledpiece();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      4,
+      f
     );
   }
 };
 
 
 /**
- * optional RoomResponse room = 1;
- * @return {?proto.RoomResponse}
+ * optional string roomId = 1;
+ * @return {string}
  */
-proto.RoomResponseStream.prototype.getRoom = function() {
-  return /** @type{?proto.RoomResponse} */ (
-    jspb.Message.getWrapperField(this, proto.RoomResponse, 1));
+proto.RoomResponseStream.prototype.getRoomid = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
- * @param {?proto.RoomResponse|undefined} value
+ * @param {string} value
+ * @return {!proto.RoomResponseStream} returns this
+ */
+proto.RoomResponseStream.prototype.setRoomid = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional Player player = 2;
+ * @return {?proto.Player}
+ */
+proto.RoomResponseStream.prototype.getPlayer = function() {
+  return /** @type{?proto.Player} */ (
+    jspb.Message.getWrapperField(this, proto.Player, 2));
+};
+
+
+/**
+ * @param {?proto.Player|undefined} value
  * @return {!proto.RoomResponseStream} returns this
 */
-proto.RoomResponseStream.prototype.setRoom = function(value) {
-  return jspb.Message.setWrapperField(this, 1, value);
+proto.RoomResponseStream.prototype.setPlayer = function(value) {
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 
@@ -2316,8 +2358,8 @@ proto.RoomResponseStream.prototype.setRoom = function(value) {
  * Clears the message field making it undefined.
  * @return {!proto.RoomResponseStream} returns this
  */
-proto.RoomResponseStream.prototype.clearRoom = function() {
-  return this.setRoom(undefined);
+proto.RoomResponseStream.prototype.clearPlayer = function() {
+  return this.setPlayer(undefined);
 };
 
 
@@ -2325,27 +2367,27 @@ proto.RoomResponseStream.prototype.clearRoom = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.RoomResponseStream.prototype.hasRoom = function() {
-  return jspb.Message.getField(this, 1) != null;
+proto.RoomResponseStream.prototype.hasPlayer = function() {
+  return jspb.Message.getField(this, 2) != null;
 };
 
 
 /**
- * optional MoveResponse move = 2;
- * @return {?proto.MoveResponse}
+ * optional Move move = 3;
+ * @return {?proto.Move}
  */
 proto.RoomResponseStream.prototype.getMove = function() {
-  return /** @type{?proto.MoveResponse} */ (
-    jspb.Message.getWrapperField(this, proto.MoveResponse, 2));
+  return /** @type{?proto.Move} */ (
+    jspb.Message.getWrapperField(this, proto.Move, 3));
 };
 
 
 /**
- * @param {?proto.MoveResponse|undefined} value
+ * @param {?proto.Move|undefined} value
  * @return {!proto.RoomResponseStream} returns this
 */
 proto.RoomResponseStream.prototype.setMove = function(value) {
-  return jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 3, value);
 };
 
 
@@ -2363,7 +2405,25 @@ proto.RoomResponseStream.prototype.clearMove = function() {
  * @return {boolean}
  */
 proto.RoomResponseStream.prototype.hasMove = function() {
-  return jspb.Message.getField(this, 2) != null;
+  return jspb.Message.getField(this, 3) != null;
+};
+
+
+/**
+ * optional PieceType killedPiece = 4;
+ * @return {!proto.PieceType}
+ */
+proto.RoomResponseStream.prototype.getKilledpiece = function() {
+  return /** @type {!proto.PieceType} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/**
+ * @param {!proto.PieceType} value
+ * @return {!proto.RoomResponseStream} returns this
+ */
+proto.RoomResponseStream.prototype.setKilledpiece = function(value) {
+  return jspb.Message.setProto3EnumField(this, 4, value);
 };
 
 

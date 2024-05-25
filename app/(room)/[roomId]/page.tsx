@@ -5,7 +5,7 @@ import Square from "@/app/lib/Square";
 import { GameStatus } from "@/app/lib/chess";
 import PieceCoordinate from "@/app/lib/pieceCoordinate";
 import Player, { Color } from "@/app/lib/player";
-import { Color as ProtoColor, GetRoomRequest } from "@/app/proto/chess_pb";
+import { Color as ProtoColor, GetRoomRequest, MoveRequest, Player as ProtoPlayer, Coordinate, Move } from "@/app/proto/chess_pb";
 import useChessStore from "@/app/store"
 import clsx from "clsx";
 import Image from "next/image";
@@ -28,25 +28,44 @@ export default function Page({ params }: { params: { roomId: string } }) {
     const [player2Ready, setPlayer2Ready] = useState(false);
 
     useEffect(() => {
-        const roomRequest = new GetRoomRequest();
+        if (!client) return;
+        if (!player) return;
+        const roomRequest = new MoveRequest();
         roomRequest.setRoomid(params.roomId);
+        const protoPlayer = new ProtoPlayer();
+        protoPlayer.setName(player.name);
+        protoPlayer.setColor(player.color == Color.WHITE ? ProtoColor.WHITE : ProtoColor.BLACK);
+        roomRequest.setPlayer(protoPlayer);
         const st = client.listenToRoom(roomRequest);
+        console.log("Listening to room")
         st.on("data", (res) => {
             // Handle the data received from the stream
             console.log(res)
+            const player = res.getPlayer();
+            const move = res.getMove();
+            if (!player2Ready && player && !move) {
+                console.log("adding player 2", player.getName())
+                chess.addPlayer(new Player(player.getName(), getColorName(player.getColor())));
+                setPlayer2Ready(true);
+                chess.playerTurn = Color.WHITE;
+                chess.gameStatus = GameStatus.IN_PROGRESS;
+            }
+            if (player && move) {
+                const from = move.getFrom();
+                const to = move.getTo();
+                if (!from || !to) return;
+                movePiece(new PieceCoordinate(from.getX(), from.getY()), new PieceCoordinate(to.getX(), to.getY()));
+            }
         });
         st.on("error", (err) => {
             // Handle any errors that occur during the stream
+            console.error("Stream errro", err)
         });
         st.on("end", () => {
             // Handle the end of the stream
+            console.log("Stream ended")
         });
-
-        return () => {
-            // Clean up the stream when the component unmounts
-            st.cancel();
-        };
-    }, []);
+    }, [player, params.roomId, client]);
     
     useEffect(() => {
         const roomRequest = new GetRoomRequest();
@@ -99,14 +118,42 @@ export default function Page({ params }: { params: { roomId: string } }) {
         }
 
         if (selectedSquare && isPossibleMove(coordinate)) {
-            const res = chess.movePiece(selectedSquare, coordinate);
-            if(res) {
+            movePiece(selectedSquare, coordinate);
+            broadCastMove(selectedSquare, coordinate);
+        }
+    }
+
+    const movePiece = (from: PieceCoordinate, to: PieceCoordinate) => {
+        const res = chess.movePiece(from, to);
+        if(res) {
             setSelectedSquare(null);
             setPossibleMoves([]);
             chess.switchTurn();
             setSquares([...board.squares]);
-            }
         }
+    }
+
+    const broadCastMove = (from: PieceCoordinate, to: PieceCoordinate) => {
+        if (!player) return
+        const moveRequest = new MoveRequest();
+        moveRequest.setRoomid(params.roomId);
+        const protoPlayer = new ProtoPlayer();
+        protoPlayer.setName(player.name);
+        protoPlayer.setColor(player.color == Color.WHITE ? ProtoColor.WHITE : ProtoColor.BLACK);
+        moveRequest.setPlayer(protoPlayer);
+        const f = new Coordinate();
+        f.setX(from.x);
+        f.setY(from.y);
+        const t = new Coordinate();
+        t.setX(to.x);
+        t.setY(to.y);
+        const move = new Move();
+        move.setFrom(f);
+        move.setTo(t);
+        moveRequest.setMove(move);
+        client.moves(moveRequest).then((res) => {
+            console.log("Move sent", res)
+        });
     }
     
     const isSelected = (coordinate: PieceCoordinate) => {

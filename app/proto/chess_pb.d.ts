@@ -253,15 +253,21 @@ export namespace GetRoomRequest {
 }
 
 export class RoomResponseStream extends jspb.Message {
-  getRoom(): RoomResponse | undefined;
-  setRoom(value?: RoomResponse): RoomResponseStream;
-  hasRoom(): boolean;
-  clearRoom(): RoomResponseStream;
+  getRoomid(): string;
+  setRoomid(value: string): RoomResponseStream;
 
-  getMove(): MoveResponse | undefined;
-  setMove(value?: MoveResponse): RoomResponseStream;
+  getPlayer(): Player | undefined;
+  setPlayer(value?: Player): RoomResponseStream;
+  hasPlayer(): boolean;
+  clearPlayer(): RoomResponseStream;
+
+  getMove(): Move | undefined;
+  setMove(value?: Move): RoomResponseStream;
   hasMove(): boolean;
   clearMove(): RoomResponseStream;
+
+  getKilledpiece(): PieceType;
+  setKilledpiece(value: PieceType): RoomResponseStream;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): RoomResponseStream.AsObject;
@@ -273,8 +279,10 @@ export class RoomResponseStream extends jspb.Message {
 
 export namespace RoomResponseStream {
   export type AsObject = {
-    room?: RoomResponse.AsObject,
-    move?: MoveResponse.AsObject,
+    roomid: string,
+    player?: Player.AsObject,
+    move?: Move.AsObject,
+    killedpiece: PieceType,
   }
 }
 

@@ -23,6 +23,7 @@ enum PlayerTurn {
     ENDED = "ENDED",
     WAITING = "WAITING"
 }
+
 class Chess {
     private _board: Board;
     private _players: Player[];

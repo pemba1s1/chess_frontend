@@ -12,7 +12,7 @@ export type ChessStore = {
 }
 const useChessStore = create<ChessStore>((set) => ({
     chess: new Chess(),
-    gRPCClient: new ChessClient(process.env.NEXT_PUBLIC_GRPC_ENDPOINT),
+    gRPCClient: new ChessClient(process.env.NEXT_PUBLIC_GRPC_ENDPOINT || ""),
     player: null,
     setPlayer: (player: Player) => set(({ player })),
     newGame: () => set({chess: new Chess()}),

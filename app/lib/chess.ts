@@ -81,6 +81,7 @@ class Chess {
     }
 
     switchTurn() {
+        console.log("Switching turn")
         if(this._gameStatus == GameStatus.WHITE_WINS || this._gameStatus == GameStatus.BLACK_WINS) {
             this._playerTurn = PlayerTurn.ENDED;
             return;
@@ -95,6 +96,10 @@ class Chess {
         }
         const fromPiece = this.board.getSquareFromCoordinate(from).piece;
         const toPiece = this.board.getSquareFromCoordinate(to).piece;
+
+        if(!fromPiece) {
+            return false;
+        }
 
         if(fromPiece?.color == toPiece?.color) {
             return false;

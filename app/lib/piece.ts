@@ -15,6 +15,15 @@ enum PieceIconPath {
     W_KING = "/pieces/white/king.svg",
 }
 
+enum modelPath {
+    BISHOP = "model/Bishop/Bishop.glb",
+    KING = "model/King/King.glb",
+    KNIGHT = "model/Knight/Knight.glb",
+    PAWN = "model/Pawn/Pawn.glb",
+    QUEEN = "model/Queen/Queen.glb",
+    ROOK = "model/Rook/Rook.glb",
+}
+
 export enum PieceType {
     PAWN = "pawn",
     ROOK = "rook",
@@ -39,12 +48,14 @@ export class Piece {
     protected _icon: string;
     protected _type: string;
     protected _moveDirection: Direction;
+    protected _modelPath: string;
 
-    constructor(color: Color, icon: string, type: string, moveDirection: Direction) {
+    constructor(color: Color, icon: string, type: string, moveDirection: Direction, modelPath: string) {
         this._color = color;
         this._icon = icon;
         this._type = type;
         this._moveDirection = moveDirection;
+        this._modelPath = modelPath;
     }
 
     get color(): Color {
@@ -59,6 +70,10 @@ export class Piece {
         return this._type;
     }
 
+    get modelPath(): string {
+        return this._modelPath;
+    }
+
     getMoveDirection(): Direction {
         return this._moveDirection;
     }
@@ -71,7 +86,7 @@ export class Pawn extends Piece {
     constructor(color: Color) {
         const icon = color === Color.WHITE ? PieceIconPath.W_PAWN : PieceIconPath.B_PAWN;
         const direction: Direction = color === Color.WHITE ? { direction: [[-1, 0]], steps: NoOfSteps.ONE } : { direction: [[1, 0]], steps: NoOfSteps.ONE };
-        super(color, icon, PieceType.PAWN, direction);
+        super(color, icon, PieceType.PAWN, direction, modelPath.PAWN);
         
         this._firstMoveDirection = color === Color.WHITE ? { direction: [[-2, 0]], steps: NoOfSteps.ONE } : { direction: [[2, 0]], steps: NoOfSteps.ONE }; 
         this._killDirection = color === Color.WHITE ? { direction: [[-1, 1], [-1, -1]], steps: NoOfSteps.ONE } : { direction: [[1, 1], [1, -1]], steps: NoOfSteps.ONE };
@@ -102,7 +117,7 @@ export class Rook extends Piece {
     constructor(color: Color) {
         const icon = color === Color.WHITE ? PieceIconPath.W_ROOK : PieceIconPath.B_ROOK;
         const direction: Direction = { direction: [[1, 0], [0, 1], [-1, 0], [0, -1]], steps: NoOfSteps.INFINITE };
-        super(color, icon, PieceType.ROOK, direction);
+        super(color, icon, PieceType.ROOK, direction, modelPath.ROOK);
     }
 }
 
@@ -110,7 +125,7 @@ export class Knight extends Piece {
     constructor(color: Color) {
         const icon = color === Color.WHITE ? PieceIconPath.W_KNIGHT : PieceIconPath.B_KNIGHT;
         const direction: Direction = { direction: [[2, 1], [1, 2], [-2, 1], [-1, 2], [2, -1], [1, -2], [-2, -1], [-1, -2]], steps: NoOfSteps.ONE };
-        super(color, icon, PieceType.KNIGHT, direction);
+        super(color, icon, PieceType.KNIGHT, direction, modelPath.KNIGHT);
     }
 }
 
@@ -118,7 +133,7 @@ export class Bishop extends Piece {
     constructor(color: Color) {
         const icon = color === Color.WHITE ? PieceIconPath.W_BISHOP : PieceIconPath.B_BISHOP;
         const direction: Direction = { direction: [[1, 1], [-1, 1], [1, -1], [-1, -1]], steps: NoOfSteps.INFINITE };
-        super(color, icon, PieceType.BISHOP, direction);
+        super(color, icon, PieceType.BISHOP, direction, modelPath.BISHOP);
     }
 }
 
@@ -126,7 +141,7 @@ export class Queen extends Piece {
     constructor(color: Color) {
         const icon = color === Color.WHITE ? PieceIconPath.W_QUEEN : PieceIconPath.B_QUEEN;
         const direction: Direction = { direction: [[1, 1], [-1, 1], [1, -1], [-1, -1], [1, 0], [0, 1], [-1, 0], [0, -1]], steps: NoOfSteps.INFINITE };
-        super(color, icon, PieceType.QUEEN, direction);
+        super(color, icon, PieceType.QUEEN, direction, modelPath.QUEEN);
     }
 }
 
@@ -134,7 +149,7 @@ export class King extends Piece {
     constructor(color: Color) {
         const icon = color === Color.WHITE ? PieceIconPath.W_KING : PieceIconPath.B_KING;
         const direction: Direction = { direction: [[1, 1], [-1, 1], [1, -1], [-1, -1], [1, 0], [0, 1], [-1, 0], [0, -1]], steps: NoOfSteps.ONE };
-        super(color, icon, PieceType.KING, direction);
+        super(color, icon, PieceType.KING, direction, modelPath.KING);
     }
 }
 

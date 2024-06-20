@@ -182,17 +182,19 @@ class Chess {
         });
 
         const normalDirection = piece.getMoveDirection();
-        normalDirection.direction.forEach((dir) => {
-            const x = from.x + dir[0];
-            const y = from.y + dir[1];
+        for(let i = 0; i < normalDirection.direction.length; i++) {
+            console.log(normalDirection.direction)
+            const x = from.x + normalDirection.direction[i][0];
+            const y = from.y + normalDirection.direction[i][1];
             const coordinate = new PieceCoordinate(x, y);
             if(x < 0 || x >= 8 || y < 0 || y >= 8 ) {
-                    return;
+                break;
             }
-            if(!this.coordinateHasPiece(coordinate)) {
-                possibleMoves.push(coordinate);
+            if(this.coordinateHasPiece(coordinate)) {
+                break;
             }
-        });
+            possibleMoves.push(coordinate);
+        }
         return possibleMoves;
     }
 

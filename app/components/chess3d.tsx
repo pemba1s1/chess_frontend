@@ -4,10 +4,10 @@ import PieceCoordinate from "../lib/pieceCoordinate";
 import Square3D from "./square3D";
 import PieceModal3D from "./pieceModal3D";
 import useChessStore from "../store";
-import { Piece } from "../lib/piece";
+import PlayerCard3D from "./player3d";
 
 const ChessBoard3D = () => {    
-  const axis = [-10,-8,-6,-4,-2,0,2,4]
+  const axis = [-10,-8,-6,-4,-2,0,2,4];
   const row = [0, 1, 2, 3, 4, 5, 6, 7];
   const col = [0, 1, 2, 3, 4, 5, 6, 7];
   const { 
@@ -17,7 +17,6 @@ const ChessBoard3D = () => {
     updateBoard
   } = useChessStore();
   const board = chess.board;
-  const players = chess.players;
   const squares = board.squares;
 
   const getTileColor = (coordinate: PieceCoordinate) => {
@@ -50,6 +49,7 @@ const ChessBoard3D = () => {
   )
 }
 
+
 export default function Chess3D () {
   return (
     <Suspense fallback={<div>Loading 3D Models......</div>}>
@@ -64,6 +64,7 @@ export default function Chess3D () {
           <ambientLight intensity={3} />
           <directionalLight castShadow/>
           <ChessBoard3D />
+          <PlayerCard3D />
         </Canvas>
       </div>
     </Suspense>

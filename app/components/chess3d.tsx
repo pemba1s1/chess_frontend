@@ -5,6 +5,7 @@ import Square3D from "./square3D";
 import PieceModal3D from "./pieceModal3D";
 import useChessStore from "../store";
 import PlayerCard3D from "./player3d";
+import { Piece } from "../lib/piece";
 
 const ChessBoard3D = () => {    
   const axis = [-10,-8,-6,-4,-2,0,2,4];
@@ -33,6 +34,13 @@ const ChessBoard3D = () => {
     return (coordinate.x + coordinate.y) % 2 === 0 ? whiteColor : blackColor;
   }
 
+  const PieceModal = ({ x, y } : { x: number, y: number }) => {
+    const piece: Piece | null = squares[ x ][ y ].piece;
+    if (piece) {
+      return <PieceModal3D piece={piece} position={[axis[y],0,axis[x]]}/>
+    }
+  }
+
   return (
     <mesh>
       {row.map((x) => (
@@ -40,7 +48,7 @@ const ChessBoard3D = () => {
             {col.map((y) => (
                 <group onClick={(e) => { e.stopPropagation(); updateBoard(new PieceCoordinate(x, y)); }} key={`${x}-${y}`}>
                   <Square3D color={getTileColor(new PieceCoordinate(x, y))} position={[axis[y],0,axis[x]]}/>
-                  {squares[ x ][ y ].piece != null && <PieceModal3D piece={squares[ x ][ y ].piece} position={[axis[y],0,axis[x]]}/>}
+                  <PieceModal x={x} y={y}/>
                 </group>
             ))}
           </mesh>
